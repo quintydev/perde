@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3 - Dairesel Sahne Işığı</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordo:#6d1b2c; --bordo-dark:#4a1220; --bordo-light:#8c2a3d;
+    --gold:#c9a24b; --gold-light:#e6cd8c; --cream:#faf5ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Poppins',sans-serif;overflow:hidden;height:100vh;background:var(--bordo-dark);}
+
+  .hero{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, var(--bordo-dark) 0%, var(--bordo) 60%, #3a0f19 100%);
+    text-align:center; color:var(--cream); flex-direction:column; gap:18px; z-index:1;
+  }
+  .hero h1{ font-family:'Playfair Display',serif; font-size:3rem; }
+  .hero p{ color: var(--gold-light); letter-spacing:3px; text-transform:uppercase; font-size:.9rem; }
+
+  #glow{
+    position:fixed; inset:0; z-index:2; pointer-events:none;
+    background: radial-gradient(circle at 50% 50%, rgba(230,205,140,.55), transparent 55%);
+    opacity:0; transition: opacity 1s ease;
+  }
+  #glow.show{ opacity:1; }
+
+  #overlay{
+    position:fixed; inset:0; z-index:3; background: var(--bordo-dark);
+    clip-path: circle(0% at 50% 50%);
+    transition: clip-path 1.4s cubic-bezier(.7,0,.25,1);
+  }
+  #overlay.open{ clip-path: circle(78% at 50% 50%); }
+
+  /* Köşe perde süsleri (dekoratif, sahne çerçevesi hissi) */
+  .corner{
+    position:fixed; width:140px; height:140px; z-index:4; pointer-events:none;
+    background: radial-gradient(circle at 0 0, var(--bordo-light), transparent 70%);
+    transition: opacity 1s ease .2s;
+  }
+  .corner.tl{ top:0; left:0; }
+  .corner.tr{ top:0; right:0; transform: scaleX(-1); }
+  .corner.bl{ bottom:0; left:0; transform: scaleY(-1); }
+  .corner.br{ bottom:0; right:0; transform: scale(-1,-1); }
+  .corner.hide{ opacity:0; }
+
+  #replay{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:20;
+    background:var(--bordo); color:#fff; border:none; padding:12px 26px; border-radius:50px;
+    font-family:inherit; font-weight:600; cursor:pointer; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  #replay:hover{ background:var(--gold); color:var(--bordo-dark); }
+  .badge{
+    position:fixed; top:20px; left:20px; z-index:20; background:rgba(0,0,0,.5); color:var(--gold-light);
+    padding:8px 16px; border-radius:20px; font-size:.8rem; letter-spacing:1px; text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p>Çorum'un Güvenilir Perde Mağazası</p>
+  <h1>Özdemir Perde</h1>
+</div>
+
+<div id="glow"></div>
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+<div id="overlay"></div>
+
+<div class="badge">3 — Dairesel Sahne Işığı</div>
+<button id="replay">🔁 Tekrar Oynat</button>
+
+<script>
+function playIntro(){
+  var overlay = document.getElementById('overlay');
+  var glow = document.getElementById('glow');
+  var corners = document.querySelectorAll('.corner');
+
+  overlay.style.display = 'block';
+  overlay.classList.remove('open');
+  glow.classList.remove('show');
+  corners.forEach(function(c){ c.classList.remove('hide'); });
+  void overlay.offsetWidth;
+
+  setTimeout(function(){
+    glow.classList.add('show');
+    overlay.classList.add('open');
+    corners.forEach(function(c){ c.classList.add('hide'); });
+  }, 500);
+
+  setTimeout(function(){
+    overlay.style.display = 'none';
+    glow.classList.remove('show');
+  }, 2100);
+}
+
+window.addEventListener('load', function(){ setTimeout(playIntro, 400); });
+document.getElementById('replay').addEventListener('click', playIntro);
+</script>
+</body>
+</html>

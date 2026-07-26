@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1 - Perde Ortadan Yırtılma</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordo:#6d1b2c; --bordo-dark:#4a1220; --bordo-light:#8c2a3d;
+    --gold:#c9a24b; --gold-light:#e6cd8c; --cream:#faf5ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Poppins',sans-serif;overflow:hidden;height:100vh;background:var(--bordo-dark);}
+
+  /* Mock hero arkaplan */
+  .hero{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, var(--bordo-dark) 0%, var(--bordo) 60%, #3a0f19 100%);
+    text-align:center; color:var(--cream); flex-direction:column; gap:18px;
+  }
+  .hero h1{ font-family:'Playfair Display',serif; font-size:3rem; }
+  .hero p{ color: var(--gold-light); letter-spacing:3px; text-transform:uppercase; font-size:.9rem; }
+
+  #intro{ position:fixed; inset:0; z-index:10; display:flex; }
+  .panel{
+    width:50%; height:100%; position:relative;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,.2) 0 2px, transparent 2px 34px),
+      linear-gradient(120deg, var(--bordo) 0%, var(--bordo-dark) 55%, var(--bordo-light) 100%);
+    box-shadow: inset 0 0 90px rgba(0,0,0,.5);
+    transition: transform .55s cubic-bezier(.65,0,.35,1), left .55s cubic-bezier(.65,0,.35,1);
+  }
+  .panel.left{ position:absolute; left:0; top:0; transform-origin:top left; }
+  .panel.right{ position:absolute; left:50%; top:0; transform-origin:top right; }
+
+  /* Gerilme (tension) fazı: perdeler titrer gibi hafif zıplar */
+  .panel.tension{ animation: shake .45s ease-in-out; }
+  @keyframes shake{
+    0%,100%{ transform: translateX(0) scaleX(1); }
+    20%{ transform: translateX(-3px) scaleX(1.01); }
+    40%{ transform: translateX(3px) scaleX(.99); }
+    60%{ transform: translateX(-2px) scaleX(1.01); }
+    80%{ transform: translateX(2px); }
+  }
+
+  .panel.tear.left{ transform: translateX(-100%) rotate(-3deg) scaleX(.85); }
+  .panel.tear.right{ transform: translateX(100%) rotate(3deg) scaleX(.85); }
+
+  /* Yırtılma anındaki ışık parlaması */
+  .flash{
+    position:fixed; inset:0; z-index:9; background:var(--gold-light);
+    opacity:0; pointer-events:none;
+  }
+  .flash.show{ animation: flashPop .5s ease-out; }
+  @keyframes flashPop{
+    0%{ opacity:0; }
+    10%{ opacity:.9; }
+    100%{ opacity:0; }
+  }
+
+  /* Yırtık seam çizgisi */
+  .seam{
+    position:fixed; top:0; bottom:0; left:50%; width:3px; z-index:11;
+    background: repeating-linear-gradient(180deg, var(--gold-light) 0 8px, transparent 8px 14px);
+    transform: translateX(-50%); opacity:.9;
+  }
+  .seam.hide{ opacity:0; transition:opacity .3s ease; }
+
+  #replay{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:20;
+    background:var(--bordo); color:#fff; border:none; padding:12px 26px; border-radius:50px;
+    font-family:inherit; font-weight:600; cursor:pointer; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  #replay:hover{ background:var(--gold); color:var(--bordo-dark); }
+  .badge{
+    position:fixed; top:20px; left:20px; z-index:20; background:rgba(0,0,0,.5); color:var(--gold-light);
+    padding:8px 16px; border-radius:20px; font-size:.8rem; letter-spacing:1px; text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p>Çorum'un Güvenilir Perde Mağazası</p>
+  <h1>Özdemir Perde</h1>
+</div>
+
+<div class="badge">1 — Ortadan Yırtılma</div>
+<div class="flash" id="flash"></div>
+<div class="seam" id="seam"></div>
+
+<div id="intro">
+  <div class="panel left" id="panelLeft"></div>
+  <div class="panel right" id="panelRight"></div>
+</div>
+
+<button id="replay">🔁 Tekrar Oynat</button>
+
+<script>
+function playIntro(){
+  var left = document.getElementById('panelLeft');
+  var right = document.getElementById('panelRight');
+  var flash = document.getElementById('flash');
+  var seam = document.getElementById('seam');
+  var intro = document.getElementById('intro');
+
+  intro.style.display = 'flex';
+  left.className = 'panel left';
+  right.className = 'panel right';
+  left.style.transform = '';
+  right.style.transform = '';
+  seam.classList.remove('hide');
+  flash.classList.remove('show');
+  void left.offsetWidth; // reflow
+
+  left.classList.add('tension');
+  right.classList.add('tension');
+
+  setTimeout(function(){
+    flash.classList.add('show');
+    seam.classList.add('hide');
+    left.classList.remove('tension');
+    right.classList.remove('tension');
+    left.classList.add('tear');
+    right.classList.add('tear');
+  }, 450);
+
+  setTimeout(function(){
+    intro.style.display = 'none';
+  }, 1250);
+}
+
+window.addEventListener('load', function(){ setTimeout(playIntro, 400); });
+document.getElementById('replay').addEventListener('click', playIntro);
+</script>
+</body>
+</html>

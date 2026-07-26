@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5 - İhtişamlı Sahne Perdesi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordo:#6d1b2c; --bordo-dark:#4a1220; --bordo-light:#8c2a3d;
+    --gold:#c9a24b; --gold-light:#e6cd8c; --cream:#faf5ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Poppins',sans-serif;overflow:hidden;height:100vh;background:var(--bordo-dark);}
+
+  .hero{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, var(--bordo-dark) 0%, var(--bordo) 60%, #3a0f19 100%);
+    text-align:center; color:var(--cream); flex-direction:column; gap:18px;
+  }
+  .hero h1{ font-family:'Playfair Display',serif; font-size:3rem; }
+  .hero p{ color: var(--gold-light); letter-spacing:3px; text-transform:uppercase; font-size:.9rem; }
+
+  #intro{ position:fixed; inset:0; z-index:10; }
+  .panel{
+    position:absolute; top:0; width:50%; height:100%;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,.2) 0 2px, transparent 2px 34px),
+      linear-gradient(120deg, var(--bordo) 0%, var(--bordo-dark) 55%, var(--bordo-light) 100%);
+    box-shadow: inset 0 0 90px rgba(0,0,0,.5);
+    transition: transform 1.6s cubic-bezier(.6,0,.25,1), clip-path 1.6s cubic-bezier(.6,0,.25,1);
+  }
+  .panel.left{
+    left:0; transform-origin:top left;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+  }
+  .panel.right{
+    left:50%; transform-origin:top right;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+  }
+  .panel.left.open{
+    transform: translateX(-100%);
+    clip-path: polygon(0 0, 100% 0, 100% 62%, 32% 100%, 0 100%);
+  }
+  .panel.right.open{
+    transform: translateX(100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 68% 100%, 0 62%);
+  }
+
+  .scallops{
+    position:fixed; top:18px; left:0; right:0; height:40px; z-index:11;
+    display:flex; justify-content:space-evenly; pointer-events:none;
+  }
+  .scallops span{
+    width:60px; height:40px; border-radius:0 0 50% 50%;
+    background: linear-gradient(180deg, var(--gold), var(--gold-light));
+    box-shadow: 0 4px 10px rgba(0,0,0,.3);
+    opacity:.95;
+    transition: transform 1s ease, opacity 1s ease;
+  }
+  .scallops.open span{ transform: translateY(-60px); opacity:0; }
+
+  #rod{
+    position:fixed; top:0; left:0; right:0; height:20px; z-index:12;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold) 40%, #8a6a20);
+    box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  }
+
+  .pull{
+    position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:13;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .pull.tug{ animation: tug .5s ease-in-out both; }
+  .pull .rope{ width:2px; height:32px; background: var(--gold-light); }
+  .pull .tassel{ width:12px; height:18px; margin-top:-2px; border-radius:0 0 50% 50%; background: linear-gradient(180deg, var(--gold), var(--gold-light)); }
+  @keyframes tug{
+    0%{ transform: translateX(-50%) translateY(0); opacity:1; }
+    45%{ transform: translateX(-50%) translateY(20px); opacity:1; }
+    100%{ transform: translateX(-50%) translateY(4px); opacity:0; }
+  }
+
+  #replay{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:20;
+    background:var(--bordo); color:#fff; border:none; padding:12px 26px; border-radius:50px;
+    font-family:inherit; font-weight:600; cursor:pointer; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  #replay:hover{ background:var(--gold); color:var(--bordo-dark); }
+  .badge{
+    position:fixed; top:20px; left:20px; z-index:20; background:rgba(0,0,0,.5); color:var(--gold-light);
+    padding:8px 16px; border-radius:20px; font-size:.8rem; letter-spacing:1px; text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p>Çorum'un Güvenilir Perde Mağazası</p>
+  <h1>Özdemir Perde</h1>
+</div>
+
+<div class="badge">5 — İhtişamlı Sahne Perdesi</div>
+<div class="scallops" id="scallops">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+<div id="rod"></div>
+<div class="pull" id="pull"><span class="rope"></span><span class="tassel"></span></div>
+
+<div id="intro">
+  <div class="panel left" id="panelLeft"></div>
+  <div class="panel right" id="panelRight"></div>
+</div>
+
+<button id="replay">🔁 Tekrar Oynat</button>
+
+<script>
+function playIntro(){
+  var left = document.getElementById('panelLeft');
+  var right = document.getElementById('panelRight');
+  var scallops = document.getElementById('scallops');
+  var pull = document.getElementById('pull');
+  var intro = document.getElementById('intro');
+
+  intro.style.display = 'block';
+  left.classList.remove('open');
+  right.classList.remove('open');
+  scallops.classList.remove('open');
+  pull.classList.remove('tug');
+  void left.offsetWidth;
+
+  pull.classList.add('tug');
+
+  setTimeout(function(){
+    left.classList.add('open');
+    right.classList.add('open');
+    scallops.classList.add('open');
+  }, 350);
+
+  setTimeout(function(){
+    intro.style.display = 'none';
+  }, 2100);
+}
+
+window.addEventListener('load', function(){ setTimeout(playIntro, 400); });
+document.getElementById('replay').addEventListener('click', playIntro);
+</script>
+</body>
+</html>

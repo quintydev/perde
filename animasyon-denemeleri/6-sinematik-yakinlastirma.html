@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6 - Sinematik Yakınlaştırma</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordo:#6d1b2c; --bordo-dark:#4a1220; --bordo-light:#8c2a3d;
+    --gold:#c9a24b; --gold-light:#e6cd8c; --cream:#faf5ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Poppins',sans-serif;overflow:hidden;height:100vh;background:var(--bordo-dark);}
+
+  .hero{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, var(--bordo-dark) 0%, var(--bordo) 60%, #3a0f19 100%);
+    text-align:center; color:var(--cream); flex-direction:column; gap:18px;
+  }
+  .hero h1{ font-family:'Playfair Display',serif; font-size:3rem; }
+  .hero p{ color: var(--gold-light); letter-spacing:3px; text-transform:uppercase; font-size:.9rem; }
+
+  #intro{ position:fixed; inset:0; z-index:10; overflow:hidden; }
+
+  .fabric{
+    position:absolute; inset:-20%;
+    background-color: var(--bordo-dark);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 2px, transparent 2px 7px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.25) 0 2px, transparent 2px 7px);
+    transform: scale(1);
+    transition: transform 1.1s cubic-bezier(.6,0,.85,0), opacity .9s ease .3s;
+    opacity:1;
+  }
+  .fabric.zoom{ transform: scale(9); opacity:0; }
+
+  .wordmark{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:10px; z-index:2; color: var(--cream);
+    opacity:0; animation: fadeInWord .6s ease .15s forwards;
+  }
+  .wordmark h2{ font-family:'Playfair Display',serif; font-size:2.4rem; letter-spacing:1px; }
+  .wordmark span{ color: var(--gold-light); letter-spacing:4px; text-transform:uppercase; font-size:.75rem; }
+  .wordmark.zoom{ transition: opacity .4s ease; opacity:0 !important; animation:none; }
+  @keyframes fadeInWord{ to{ opacity:1; } }
+
+  .ray{
+    position:absolute; top:50%; left:50%; height:2px; width:0;
+    background: linear-gradient(90deg, var(--gold-light), transparent);
+    transform-origin: left center;
+    opacity:0; z-index:1;
+    transition: width .8s cubic-bezier(.2,.8,.2,1), opacity .8s ease;
+  }
+  .ray.burst{ width:120vw; opacity:.55; }
+
+  #replay{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:20;
+    background:var(--bordo); color:#fff; border:none; padding:12px 26px; border-radius:50px;
+    font-family:inherit; font-weight:600; cursor:pointer; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  #replay:hover{ background:var(--gold); color:var(--bordo-dark); }
+  .badge{
+    position:fixed; top:20px; left:20px; z-index:20; background:rgba(0,0,0,.5); color:var(--gold-light);
+    padding:8px 16px; border-radius:20px; font-size:.8rem; letter-spacing:1px; text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p>Çorum'un Güvenilir Perde Mağazası</p>
+  <h1>Özdemir Perde</h1>
+</div>
+
+<div class="badge">6 — Sinematik Yakınlaştırma</div>
+
+<div id="intro">
+  <div class="fabric" id="fabric"></div>
+  <div id="rays"></div>
+  <div class="wordmark" id="wordmark">
+    <h2>Özdemir Perde</h2>
+    <span>Kaliteyi Evinize Taşıyoruz</span>
+  </div>
+</div>
+
+<button id="replay">🔁 Tekrar Oynat</button>
+
+<script>
+var RAY_COUNT = 10;
+
+function buildRays(){
+  var container = document.getElementById('rays');
+  container.innerHTML = '';
+  for (var i = 0; i < RAY_COUNT; i++){
+    var r = document.createElement('div');
+    r.className = 'ray';
+    r.style.transform = 'rotate(' + (i * (360 / RAY_COUNT)) + 'deg)';
+    container.appendChild(r);
+  }
+}
+
+function playIntro(){
+  var intro = document.getElementById('intro');
+  var fabric = document.getElementById('fabric');
+  var wordmark = document.getElementById('wordmark');
+
+  intro.style.display = 'block';
+  fabric.classList.remove('zoom');
+  wordmark.classList.remove('zoom');
+  wordmark.style.animation = 'none';
+  buildRays();
+  void fabric.offsetWidth;
+  wordmark.style.animation = '';
+
+  setTimeout(function(){
+    document.querySelectorAll('.ray').forEach(function(r){ r.classList.add('burst'); });
+  }, 500);
+
+  setTimeout(function(){
+    fabric.classList.add('zoom');
+    wordmark.classList.add('zoom');
+  }, 650);
+
+  setTimeout(function(){
+    intro.style.display = 'none';
+  }, 1900);
+}
+
+window.addEventListener('load', function(){ setTimeout(playIntro, 400); });
+document.getElementById('replay').addEventListener('click', playIntro);
+</script>
+</body>
+</html>

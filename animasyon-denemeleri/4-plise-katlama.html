@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 - Petek Perde Katlanması</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordo:#6d1b2c; --bordo-dark:#4a1220; --bordo-light:#8c2a3d;
+    --gold:#c9a24b; --gold-light:#e6cd8c; --cream:#faf5ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Poppins',sans-serif;overflow:hidden;height:100vh;background:var(--bordo-dark);}
+
+  .hero{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, var(--bordo-dark) 0%, var(--bordo) 60%, #3a0f19 100%);
+    text-align:center; color:var(--cream); flex-direction:column; gap:18px;
+  }
+  .hero h1{ font-family:'Playfair Display',serif; font-size:3rem; }
+  .hero p{ color: var(--gold-light); letter-spacing:3px; text-transform:uppercase; font-size:.9rem; }
+
+  #intro{ position:fixed; inset:0; z-index:10; display:flex; }
+  .side{
+    width:50%; height:100%; position:relative; display:flex;
+    transition: transform 1s cubic-bezier(.6,0,.3,1);
+  }
+  .side.left{ left:0; transform-origin:left; }
+  .side.right{ left:0; transform-origin:right; justify-content:flex-end; }
+  .side.left.closed{ transform: translateX(-100%); }
+  .side.right.closed{ transform: translateX(100%); }
+
+  .fold{
+    height:100%; flex:1 0 auto;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.15), transparent 40%, rgba(255,255,255,.08) 60%, transparent),
+      linear-gradient(160deg, var(--bordo) 0%, var(--bordo-dark) 55%, var(--bordo-light) 100%);
+    transition: transform .7s cubic-bezier(.5,0,.3,1);
+    backface-visibility:hidden;
+  }
+  .side{ perspective: 900px; }
+  .fold.even{ transform-origin:right center; }
+  .fold.odd{ transform-origin:left center; }
+  .fold.folded.even{ transform: rotateY(-68deg); }
+  .fold.folded.odd{ transform: rotateY(68deg); }
+
+  #rod{
+    position:fixed; top:0; left:0; right:0; height:20px; z-index:12;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold) 40%, #8a6a20);
+    box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  }
+
+  #replay{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:20;
+    background:var(--bordo); color:#fff; border:none; padding:12px 26px; border-radius:50px;
+    font-family:inherit; font-weight:600; cursor:pointer; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  #replay:hover{ background:var(--gold); color:var(--bordo-dark); }
+  .badge{
+    position:fixed; top:20px; left:20px; z-index:20; background:rgba(0,0,0,.5); color:var(--gold-light);
+    padding:8px 16px; border-radius:20px; font-size:.8rem; letter-spacing:1px; text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p>Çorum'un Güvenilir Perde Mağazası</p>
+  <h1>Özdemir Perde</h1>
+</div>
+
+<div class="badge">4 — Petek (Plise) Perde Katlanması</div>
+<div id="rod"></div>
+
+<div id="intro">
+  <div class="side left" id="sideLeft"></div>
+  <div class="side right" id="sideRight"></div>
+</div>
+
+<button id="replay">🔁 Tekrar Oynat</button>
+
+<script>
+var STRIP_COUNT = 7;
+
+function buildStrips(container){
+  container.innerHTML = '';
+  for (var i = 0; i < STRIP_COUNT; i++){
+    var f = document.createElement('div');
+    f.className = 'fold ' + (i % 2 === 0 ? 'even' : 'odd');
+    f.style.transitionDelay = (i * 45) + 'ms';
+    container.appendChild(f);
+  }
+}
+
+function playIntro(){
+  var left = document.getElementById('sideLeft');
+  var right = document.getElementById('sideRight');
+
+  document.getElementById('intro').style.display = 'flex';
+  left.classList.remove('closed');
+  right.classList.remove('closed');
+  buildStrips(left);
+  buildStrips(right);
+  void left.offsetWidth;
+
+  setTimeout(function(){
+    left.querySelectorAll('.fold').forEach(function(f){ f.classList.add('folded'); });
+    right.querySelectorAll('.fold').forEach(function(f){ f.classList.add('folded'); });
+  }, 250);
+
+  setTimeout(function(){
+    left.classList.add('closed');
+    right.classList.add('closed');
+  }, 550);
+
+  setTimeout(function(){
+    document.getElementById('intro').style.display = 'none';
+  }, 1700);
+}
+
+window.addEventListener('load', function(){ setTimeout(playIntro, 400); });
+document.getElementById('replay').addEventListener('click', playIntro);
+</script>
+</body>
+</html>

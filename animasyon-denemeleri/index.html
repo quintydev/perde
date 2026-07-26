@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Açılış Animasyonu Denemeleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordo:#6d1b2c; --bordo-dark:#4a1220; --bordo-light:#8c2a3d;
+    --gold:#c9a24b; --gold-light:#e6cd8c; --cream:#faf5ec; --ink-soft:#6b5d54;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Poppins',sans-serif; background:var(--cream); color:#2b211c;
+    padding: 60px 8vw;
+  }
+  h1{ font-family:'Playfair Display',serif; color:var(--bordo-dark); font-size:2.2rem; margin-bottom:10px; }
+  p.sub{ color:var(--ink-soft); margin-bottom:40px; max-width:640px; }
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:26px; max-width:1200px;
+  }
+  .card{
+    background:#fff; border-radius:14px; padding:28px 24px; text-decoration:none; color:inherit;
+    box-shadow:0 20px 45px -20px rgba(74,18,32,.25); display:block;
+    transition:transform .3s ease, box-shadow .3s ease; border: 1px solid rgba(109,27,44,.08);
+  }
+  .card:hover{ transform:translateY(-6px); box-shadow:0 30px 55px -20px rgba(74,18,32,.4); }
+  .num{
+    width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--bordo),var(--bordo-light));
+    color:var(--gold-light); display:flex; align-items:center; justify-content:center;
+    font-weight:700; margin-bottom:16px; font-family:'Playfair Display',serif;
+  }
+  .card h3{ font-size:1.15rem; margin-bottom:8px; color:var(--bordo-dark); }
+  .card p{ font-size:.88rem; color:var(--ink-soft); line-height:1.5; }
+</style>
+</head>
+<body>
+
+<h1>Açılış Animasyonu Denemeleri</h1>
+<p class="sub">Aşağıdaki 6 farklı konsepti tek tek inceleyip beğendiğinizi seçebilirsiniz. Her sayfa otomatik oynar, altındaki "Tekrar Oynat" butonuyla istediğiniz kadar tekrar izleyebilirsiniz.</p>
+
+<div class="grid">
+  <a class="card" href="1-yirtilma.html">
+    <div class="num">1</div>
+    <h3>Ortadan Yırtılma</h3>
+    <p>Perde önce gerilir/titrer, sonra bir ışık parlamasıyla ortadan hızlıca ikiye ayrılıp yana savrulur. Enerjik ve dramatik bir giriş.</p>
+  </a>
+  <a class="card" href="2-yukari-toplanan.html">
+    <div class="num">2</div>
+    <h3>Yukarı Toplanan Perde</h3>
+    <p>Roman/rulo perde mantığıyla tek parça perde, pileleri sıklaşarak yukarı doğru toplanır ve sahneyi alttan üste açar.</p>
+  </a>
+  <a class="card" href="3-dairesel-isik.html">
+    <div class="num">3</div>
+    <h3>Dairesel Sahne Işığı</h3>
+    <p>Perde kumaşı yerine ortada büyüyen bir spot ışığı halkası siteyi kademeli olarak ortaya çıkarır. Modern ve sade bir giriş.</p>
+  </a>
+  <a class="card" href="4-plise-katlama.html">
+    <div class="num">4</div>
+    <h3>Petek (Plise) Katlanma</h3>
+    <p>Perde, gerçek bir plise perde gibi akordeon şeklinde katlanarak kenarlara toplanır. Ürün grubuna doğrudan gönderme yapar.</p>
+  </a>
+  <a class="card" href="5-ihtisamli-sahne.html">
+    <div class="num">5</div>
+    <h3>İhtişamlı Sahne Perdesi</h3>
+    <p>Halkalı ray, ip/püskül çekişi ve alt köşelerin zarifçe kavis çizerek toplanması ile en gösterişli/lüks seçenek.</p>
+  </a>
+  <a class="card" href="6-sinematik-yakinlastirma.html">
+    <div class="num">6</div>
+    <h3>Sinematik Yakınlaştırma</h3>
+    <p>Kumaş dokusuna yakın çekimden, ışık huzmeleriyle birlikte hızlı bir zoom ile siteye geçiş. Modern/teknolojik bir his verir.</p>
+  </a>
+</div>
+
+</body>
+</html>
